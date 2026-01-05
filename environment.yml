@@ -1,0 +1,10 @@
+name: agri_analysis
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pandas          # For dataframes and CSV handling
+  - geopandas       # Essential for handling the GeoJSON and spatial coordinates
+  - shapely         # For geometric operations (points/polygons)
+  - matplotlib      # For quick visualization of the yield maps
+  - jupyterlab      # Best environment to run this kind of exploratory code
