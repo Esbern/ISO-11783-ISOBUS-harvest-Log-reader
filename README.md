@@ -56,3 +56,19 @@ pip install -e .
     - `errors.py`: lightweight exception helper used by non-GUI code.
 
 If you want, I can expand the docstrings further, add type hints across the codebase, or run `pytest` inside a micromamba environment next.
+
+## Environments
+
+Use two separate conda environments to keep the library dependencies minimal and provide a richer environment for notebooks that do validation, projection, plotting and kriging.
+
+- `environment-core.yml`: minimal environment for developing the library (raw file reading). Use for building and running unit tests.
+- `environment-notebooks.yml`: full environment for interactive work — includes `geopandas`, `pyproj`, `shapely`, `rasterio`, `pykrige`, `gstools`, plotting libraries and `jupyterlab`.
+
+Create them with:
+
+```bash
+conda env create -f environment-core.yml
+conda env create -f environment-notebooks.yml
+```
+
+Activate the notebooks environment to run and work on notebooks that perform projection, plotting and kriging.

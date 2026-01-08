@@ -1,0 +1,26 @@
+name: pyagri-notebooks
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - jupyterlab
+  - ipykernel
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - plotly
+  - openpyxl
+  - tqdm
+  - scipy
+  - scikit-learn
+  - geopandas
+  - pyproj
+  - shapely
+  - rasterio
+  - pykrige
+  - gstools
+  - ipywidgets
+  - pip
+  - pip:
+    - Cython
