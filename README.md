@@ -72,3 +72,26 @@ conda env create -f environment-notebooks.yml
 ```
 
 Activate the notebooks environment to run and work on notebooks that perform projection, plotting and kriging.
+
+## CLI Commands
+
+After installing the package in editable mode (`pip install -e .`) the package provides a small CLI utility and there is also a converter script for one-off conversions.
+
+- **Extract fields -> GeoJSON**: installs the console script `pyagri-extract` that parses `TASKDATA.xml` and writes a GeoJSON file of field polygons and task metadata.
+
+```bash
+# example (micromamba environment active)
+pyagri-extract data/TASKDATA data/harvest_fields.geojson
+```
+
+- **Convert TaskData -> CSV**: use the provided converter to export task CSVs. Either run the script directly or use the package export module:
+
+```bash
+# run the script directly
+python scripts/convert_taskdata.py data/TASKDATA data/ledreborg_CSV
+
+# or via the package module
+python -m pyAgriculture.export data/TASKDATA data/ledreborg_CSV
+```
+
+Both commands assume you are in the repository root or adjust paths accordingly.

@@ -7,5 +7,6 @@ __all__ = [
 	'agriculture',
 	'export',
 	'sorting_utils',
+	'geo',
 ]
 
