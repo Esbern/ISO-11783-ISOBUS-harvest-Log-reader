@@ -1,17 +1,32 @@
-name: agri_analysis
+name: pyagri
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
-  - pandas
-  - numpy
-  - geopandas
-  - shapely
-  - matplotlib
-  - seaborn
-  - jupyterlab
-  - contextily    # <--- NEW: For Orthophoto backgrounds (XYZ Tiles)
-  - scipy         # <--- NEW: For spatial interpolation (Griddata)
-  - pyproj        # <--- NEW: For accurate coordinate transformation
-  - pykrige       # <--- NEW: For Kriging Interpolation
+  - python=3.10
   - pip
+  - pip:
+    - Cython
+    - numpy
+    - pandas
+    - atomicwrites
+    - attrs
+    - certifi
+    - click
+    - click-plugins
+    - colorama
+    - coverage
+    - et-xmlfile
+    - iniconfig
+    - jdcal
+    - munch
+    - openpyxl
+    - packaging
+    - pluggy
+    - py
+    - pyparsing
+    - pytest
+    - python-dateutil
+    - pytz
+    - six
+    - toml
+    - tqdm

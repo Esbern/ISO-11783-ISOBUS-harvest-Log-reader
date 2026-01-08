@@ -1,44 +1,58 @@
-# CLAAS Telematics ISO-11783 Forensic Log Reader
+# pyAgriculture11783
+This is a package to read TASKDATA.xml, TLG.xml and TLG.bin files in Python. 
+The project is under development and feedback is apritiated!
 
-## Overview
-This tool is a specialized Python parser for agricultural harvest data exported from **CLAAS Telematics** (CLAAS Connect). 
+The idea is to give a path to the xml/bin files and extract the data as pandas dataframes. The following code snipped is 
+an example of how the data extraction are suppose to work. 
 
-Standard ISO-11783 reading tools often fail with these specific log files (`TLG...BIN`) because the data stream is wrapped in a proprietary framing protocol. This project implements a **Forensic Packet Scanner** that bypasses the proprietary overhead to extract the raw ISO 11783-10 (Type 1) data.
+    from pandas import ExcelWriter
+    py_agri = PyAgriculture('path/to/TaskData/')
+    py_agri.gather_data()
+    
+    writer = ExcelWriter('PythonExport.xlsx')
+    for i in range(len(py_agri.tasks)):
+        if isinstance(py_agri.tasks[i], pd.DataFrame):
+            py_agri.tasks[i].to_excel(writer, 'Sheet' + str(i))
+    writer.save()
+    
+## Installation (recommended: micromamba/conda)
 
-It links the binary sensor data with the `TASKDATA.XML` metadata to generate a fully validated, research-grade dataset including:
-* **True GPS Speed** (calculated to replace broken speed sensors).
-* **Crop Density** (physics-based verification).
-* **Yield Calculation** (corrected for crop type and machine state).
+This repository is now focused on reading TLG XML and BIN files and exporting
+them to CSV. The minimal environment needed is Python with `numpy`, `pandas`
+and `Cython` if you plan to build the optional Cython extension.
 
-## Key Findings: The Data Structure
-Through forensic binary analysis, the proprietary stream was reverse-engineered. The scanner identifies a dynamic **Fixed-Frame Packet Structure**:
+Create the environment with micromamba (recommended) or conda using the
+provided `environment.yml`:
 
-1.  **Harvest Mode:** Data is transmitted in **93-byte frames**, consisting of a **68-byte payload** (standard ISO 11783-10 Type 1 records) wrapped in a **25-byte proprietary overhead** (likely checksums and CAN identifiers).
-2.  **Transport/Idle Mode:** The frame structure shifts to a reduced format with a **10-byte overhead**.
-
-This tool automatically detects these headers ("Header Gap") to maintain sync with the data stream.
-
-## Features
-* **Universal Geofencing:** Automatically detects field boundaries from `TASKDATA.XML`.
-* **Multi-Year Support:** Handles complex task files spanning multiple harvest seasons.
-* **Physics-Based Validation:** * Calculates `Density (kg/L)` to differentiate between valid crop flow and machine idling.
-    * Corrects a known **10x scaling factor** in the raw volume data for specific crop types.
-* **GPS Speed Derivation:** Re-calculates speed (`Distance / Time`) from coordinates to fix sensor dropouts.
-* **Header Monitor:** Outputs a log of skipped bytes (`HEADER_GAP_MONITOR.csv`) to validate the parsing integrity.
-
-## Installation
-
-This project uses a Conda environment.
-
-1.  Clone the repository.
-2.  Install dependencies:
-    ```bash
-    conda env create -f environment.yml
-    conda activate agri_analysis
-    ```
-3.  Place your `TASKDATA.XML` and `TLG...BIN` files in the `./data/taskdata/` folder.
-
-## Usage
-Run the Jupyter Notebook:
 ```bash
-jupyter lab ISO11783_TaskData.ipynb
+# using micromamba
+micromamba create -f environment.yml -n pyagri -y
+micromamba activate pyagri
+
+# or using conda
+conda env create -f environment.yml -n pyagri
+conda activate pyagri
+```
+
+Then install the package in editable mode for development:
+
+```bash
+pip install -e .
+```
+
+If you prefer a pure-`pip` workflow, create a virtualenv and run:
+
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
+
+## Code organization
+
+- **pyAgriculture/**: main package
+    - `agriculture.py`: core reader (`PyAgriculture`) — parses `TASKDATA.xml`, TLG XML and BIN files and converts device output into `pandas.DataFrame` objects.
+    - `export.py`: small CLI helper to export discovered tasks to CSV files.
+    - `sorting_utils.py`: small XML-to-dict and lookup helpers used by the parsers.
+    - `errors.py`: lightweight exception helper used by non-GUI code.
+
+If you want, I can expand the docstrings further, add type hints across the codebase, or run `pytest` inside a micromamba environment next.

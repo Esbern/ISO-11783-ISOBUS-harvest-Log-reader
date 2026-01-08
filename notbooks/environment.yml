@@ -1,0 +1,17 @@
+name: agri_analysis
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pandas
+  - numpy
+  - geopandas
+  - shapely
+  - matplotlib
+  - seaborn
+  - jupyterlab
+  - contextily    # <--- NEW: For Orthophoto backgrounds (XYZ Tiles)
+  - scipy         # <--- NEW: For spatial interpolation (Griddata)
+  - pyproj        # <--- NEW: For accurate coordinate transformation
+  - pykrige       # <--- NEW: For Kriging Interpolation
+  - pip
