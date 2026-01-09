@@ -1,4 +1,4 @@
-"""Convert TASKDATA to CSV using pyAgriculture.export
+"""Convert TASKDATA to CSV using pyagri.export
 
 Usage:
     python scripts/convert_taskdata.py [source_taskdata_dir] [output_dir]
@@ -10,7 +10,7 @@ Defaults:
 from pathlib import Path
 import sys
 
-from pyAgriculture.export import export_taskdata
+from pyagri.export import export_taskdata
 
 
 def main(argv=None):

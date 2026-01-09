@@ -1,10 +1,10 @@
 # Author Axel Hörteborn
-"""pyAgriculture.agriculture
+"""pyagri.agriculture
 
 Core reader for ISO11783 TASKDATA/TLG binary and XML files.
 
 Provides the `PyAgriculture` class which parses TaskData and associated TLG
-XML/BIN files and converts device output into pandas DataFrames.
+XML/BIN files and converts device output into pandas.DataFrame objects.
 """
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -18,9 +18,11 @@ from .sorting_utils import find_by_key
 try:
     # Prefer compiled extension when available
     from .cython_agri import read_static_binary_data, cython_read_dlvs  # type: ignore
+    _CYTHON_AVAILABLE = True
 except Exception:
     # Fallback to the pure-Python implementation
     from .cython_agri_py import read_static_binary_data, cython_read_dlvs
+    _CYTHON_AVAILABLE = False
 
 
 class PyAgriculture:
@@ -38,7 +40,8 @@ class PyAgriculture:
         self.task_infos = []
         self.dlvs = []
         self.dlv_idx = {}
-        self.read_with_cython = True
+        # Set read_with_cython deterministically based on import availability
+        self.read_with_cython = globals().get('_CYTHON_AVAILABLE', False)
         self.rename_columns_with_units = False
         self.start_date = datetime(year=1980, month=1, day=1)
         self.dt = None
@@ -417,7 +420,7 @@ class PyAgriculture:
             try:
                 data_row[idx + nr_static - 1] = dlv_val
             except Exception as e:
-                warnings.warn(f"Failed to assign DLV value at idx {idx}: {e}")
+                warnings.warn(f"Failed to assign DLV value at idx {idx}: {e})")
         return [read_point, data_row, unit_row]
 
     def convert_yield_field(self):

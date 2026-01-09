@@ -1,7 +1,7 @@
 """Command-line helper to export TLG tasks to CSV files.
 
 Usage:
-    python -m pyAgriculture.export /path/to/TaskData/ [output_dir]
+    python -m pyagri.export /path/to/TaskData/ [output_dir]
 
 This uses `PyAgriculture` to gather tasks and writes each DataFrame to a
 CSV file named using `df.attrs['task_name']` (falling back to index).
@@ -35,7 +35,14 @@ def export_taskdata(path: str, out_dir: Optional[str] = None) -> list:
         name = df.attrs.get('task_name') or f'task_{i}'
         safe_name = ''.join(c if c.isalnum() or c in (' ', '-', '_') else '_' for c in name).strip()
         out_path = Path(out_dir) / f"{safe_name}.csv"
-        df.to_csv(out_path, index=False)
+        # Append to existing CSVs instead of overwriting so multi-year
+        # exports for the same task are preserved and can be split later.
+        exists = out_path.exists()
+        if exists:
+            # Append without header to avoid duplicate header rows
+            df.to_csv(out_path, index=False, mode='a', header=False)
+        else:
+            df.to_csv(out_path, index=False)
         written.append(str(out_path))
     return written
 
@@ -44,7 +51,7 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     if len(argv) == 0:
-        print("Usage: pyAgriculture.export <path-to-TaskData> [output-dir]")
+        print("Usage: pyagri.export <path-to-TaskData> [output-dir]")
         raise SystemExit(2)
     path = argv[0]
     out_dir = argv[1] if len(argv) > 1 else None

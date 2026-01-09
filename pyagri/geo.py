@@ -1,4 +1,4 @@
-"""TASKDATA -> GeoJSON utilities for pyAgriculture.
+"""TASKDATA -> GeoJSON utilities for pyagri.
 
 Provides `extract_taskdata_to_geojson()` which mirrors the standalone
 script but is part of the package API so it can be used from code or by
@@ -146,6 +146,21 @@ def extract_taskdata_to_geojson(src_folder: str = 'data/TASKDATA', out_path: str
     geojson_obj = {'type': 'FeatureCollection', 'features': features}
     outp = Path(out_path)
     outp.parent.mkdir(parents=True, exist_ok=True)
+
+    # If an existing GeoJSON FeatureCollection is present, append new features
+    if outp.exists():
+        try:
+            with outp.open('r', encoding='utf-8') as f:
+                existing = json.load(f)
+            if isinstance(existing, dict) and existing.get('type') == 'FeatureCollection' and isinstance(existing.get('features'), list):
+                existing['features'].extend(features)
+                geojson_obj = existing
+            else:
+                raise ValueError(f"Existing file {outp} is not a GeoJSON FeatureCollection")
+        except json.JSONDecodeError:
+            # If the existing file is invalid JSON, overwrite it with the new collection
+            pass
+
     with outp.open('w', encoding='utf-8') as f:
         json.dump(geojson_obj, f, indent=2)
 

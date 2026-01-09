@@ -21,6 +21,5 @@ dependencies:
   - pykrige
   - gstools
   - ipywidgets
+  - Cython
   - pip
-  - pip:
-    - Cython
