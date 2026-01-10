@@ -8,4 +8,5 @@ __all__ = [
     'export',
     'sorting_utils',
     'geo',
+    'taskdata_report',
 ]
