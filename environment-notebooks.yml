@@ -22,4 +22,5 @@ dependencies:
   - gstools
   - ipywidgets
   - Cython
+  - duckdb
   - pip

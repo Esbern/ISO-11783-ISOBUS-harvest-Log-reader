@@ -390,6 +390,8 @@ class PyAgriculture:
         df.attrs['task_name'] = task_name
         df.attrs['columns'] = df_columns
         df.attrs['unit_row'] = unit_row
+        # Store TLG file path for export (relative to TASKDATA folder)
+        df.attrs['tlg_file'] = file_path
         return df
 
     @staticmethod
